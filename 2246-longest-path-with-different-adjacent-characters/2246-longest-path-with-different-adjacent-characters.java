@@ -1,38 +1,43 @@
 class Solution {
-    int longestPathValue = 1; // variable to store the length of the longest path
+    int maxPath=0;
+    public int longestPath(int[] parent, String s){
 
-    public int longestPath(int[] parent, String s) {
-        // create an adjacency list representation of the tree
-        Map<Integer, List<Integer>> adj = new HashMap<>();
-        for(int i = 1; i < parent.length; i++){
-            int j = parent[i];
-            adj.putIfAbsent(j, new LinkedList<>());
-            adj.get(j).add(i);
-        }
-        // call dfs on the root of the tree
-        dfs(0, adj, s);
-        return longestPathValue;
+        //Creating adjacency list
+
+        ArrayList<Integer>[] a = new ArrayList[parent.length];
+        
+        for(int i=0;i<parent.length;i++)
+            a[i] = new ArrayList<Integer>();
+
+        for(int i=1;i<parent.length;i++)
+            a[parent[i]].add(i);
+
+        // dfs from root node
+        dfs(-1,0,a,s);
+        
+        return maxPath+1;  //since we have to return no. of vertices in path length, so adding +1
     }
 
-    public int dfs(int node, Map<Integer, List<Integer>> adj, String s){
-        // if the node is a leaf node, return 1
-        if(!adj.containsKey(node)) return 1;
-        int max = 0, secondMax = 0;
-        // for each neighbor of the node
-        for(int nbrNode : adj.get(node)){
-            int longestPathFromNbrNode = dfs(nbrNode , adj, s);
-            // if the characters at the current node and its neighbor are the same, ignore the neighbor
-            if(s.charAt(node) == s.charAt(nbrNode)) continue;
-            // update max and secondMax with the longest path from the neighbor node
-            if(longestPathFromNbrNode > max){
-                secondMax = max;
-                max = longestPathFromNbrNode;
-            }else if(longestPathFromNbrNode > secondMax){
-                secondMax = longestPathFromNbrNode;
+    private int dfs(int prev,int curr,ArrayList<Integer>[] a,String s)
+    {
+        int maxPath1=0;//first longest Path
+        int maxPath2=0;//second longest Path
+        for(int x:a[curr]){
+            if(x!=prev)
+            {
+                int pathlength=dfs(curr,x,a,s); //longest path for children node
+                pathlength=s.charAt(x)==s.charAt(curr)?0:pathlength+1;
+                
+                if(pathlength>=maxPath1){
+                    maxPath2=maxPath1;
+                    maxPath1=pathlength;
+                }
+                else if(pathlength>=maxPath2)
+                    maxPath2=pathlength;
             }
         }
-        // update longestPathValue with the longest path that includes the current node
-        longestPathValue = Math.max(longestPathValue, max+secondMax+1);
-        return max+1;
+        maxPath = Math.max(maxPath,maxPath1+maxPath2); //updating global maxPath
+         
+        return maxPath1; //return longest path for children node
     }
 }
