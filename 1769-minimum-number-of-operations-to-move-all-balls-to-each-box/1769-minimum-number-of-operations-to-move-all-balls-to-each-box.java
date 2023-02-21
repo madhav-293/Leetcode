@@ -1,17 +1,27 @@
 class Solution {
     public int[] minOperations(String boxes) {
-        int[] res = new int[boxes.length()];
-        for (int k = 0; k < boxes.length(); k++) {
-            int i = 0, j = boxes.length()-1;
-            int c = 0;
-            while(i < k || j > k){
-                if(i < k && boxes.charAt(i) == '1') c += k-i;
-                if(j > k && boxes.charAt(j) == '1') c += j-k;
-                i++;
-                j--;
-            }
-            res[k] = c;
+        int n = boxes.length();
+
+        int[] left = new int[n];
+        int[] right = new int[n];
+        int[] ans = new int[n];
+
+        int count = boxes.charAt(0) - '0';
+        for(int i = 1 ; i < n ; i++){
+            left[i] = left[i - 1] + count;
+            count += boxes.charAt(i) - '0';
         }
-        return res;
+
+        count = boxes.charAt(n - 1) - '0';
+        for(int i = n - 2 ; i >=0 ; i--){
+            right[i] = right[i + 1] + count;
+            count += boxes.charAt(i) - '0';
+        }
+		
+        for(int i = 0 ; i < n ; i++) {
+            ans[i] = left[i] + right[i];
+        }
+
+        return ans;
     }
 }
