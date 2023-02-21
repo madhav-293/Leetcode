@@ -8,6 +8,8 @@ class Solution {
         while(start<=l){
             char a=s.charAt(start);
             char b=s.charAt(l);
+            
+            // Character.isLetterOrDigit(char);
             if(!((a>='a' && a<='z') || (a>='0' && a<='9') || (a>='A' && a<='Z'))){
                 start++;
             }
