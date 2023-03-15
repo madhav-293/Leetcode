@@ -1,23 +1,33 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        Set<List<Integer>> set=new HashSet<>();
-        if(nums.length==0) return new ArrayList<>();
+        List<List<Integer>> results = new ArrayList<List<Integer>>();
         Arrays.sort(nums);
-        for(int i=0;i<nums.length-2;i++){
-            int left=i+1,right=nums.length-1;
-            while(left<right){
-                // if(nums[left]==nums[left+1])
-                //     left++;
-                // if(nums[right]==nums[right-1])
-                //     right++;
-                int sum=nums[i]+nums[left]+nums[right];
-                if(sum==0) set.add(Arrays.asList(nums[i],nums[left++],nums[right]));
-                if(sum<0) left++;
-                if(sum>0) right--;
+        int n = nums.length;
+        for (int i = 0; i < n - 2; i++) {
+            if (i == 0 || nums[i] != nums[i-1]) { //skip same values at nums[i] to avoid duplicats 
+                int l = i + 1;
+                int r = n - 1;                
+                while (l < r) {
+                    int sum = nums[i] + nums[l] + nums[r];
+                    if (sum == 0) {
+                        results.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                        // skip same values to avoid duplicats 
+                        while(l < r && nums[l] == nums[l+1]) { 
+                            l++;
+                        }
+                        while(l < r && nums[r] == nums[r-1]) {
+                            r--;
+                        }
+                        l++;
+                        r--;
+                    } else if (sum < 0) {
+                        l++;
+                    } else if (sum > 0) {
+                        r--;
+                    }
+                }
             }
         }
-        return new ArrayList<>(set);
-        
+        return results;
     }
 }
-
