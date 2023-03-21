@@ -1,18 +1,19 @@
 class Solution {
     public boolean isHappy(int n) {
-        List<Integer> num = new ArrayList<Integer>();
+        Set<Integer> set = new HashSet<>();
         while(n!=1){
             int temp=n;
             n=0;
             while(temp>0){
                 n=n+(int)Math.pow((temp%10),2);
-                temp=temp/10;
+                temp/=10;
             }
-            if(num.contains(n))
+            if(set.contains(n))
                 return false;
             else
-                num.add(n);
+                set.add(n);
         }
         return true;
     }
 }
+
