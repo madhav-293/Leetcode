@@ -1,34 +1,21 @@
-class Pair{
-    int node;
-    int dist;
-    Pair(int node,int dist){
-        this.node=node;
-        this.dist=dist;
-    }
-}
+
 class Solution {
-    public int minScore(int n, int[][] roads) {
-        List<List<Pair>> adj=new ArrayList<>();
-        for(int i=0;i<n+1;i++)
-            adj.add(new ArrayList<>());
-        for(int i=0;i<roads.length;i++){
-            adj.get(roads[i][0]).add(new Pair(roads[i][1],roads[i][2]));
-            adj.get(roads[i][1]).add(new Pair(roads[i][0],roads[i][2]));
-        }
-        Queue<Pair> qu=new LinkedList<>();
-        boolean vis[]=new boolean[n+1];
-        qu.add(new Pair(1,Integer.MAX_VALUE));
-        int ans=Integer.MAX_VALUE;
-        while(!qu.isEmpty()){
-            Pair p=qu.poll();
-            vis[p.node]=true;
-            ans=Math.min(ans,p.dist);
-            for(Pair adjcomp:adj.get(p.node)){
-                if(!vis[adjcomp.node]){
-                    qu.add(adjcomp);
-                }
-            }
-        }
-        return ans;
+    
+       int[] dsu;
+public int minScore(int n, int[][] roads) {
+    dsu = new int[n+1];
+    int[] ans = new int[n+1];
+    for(int i = 0; i <= n; i++) dsu[i] = i;
+    Arrays.fill(ans, Integer.MAX_VALUE);
+    for(int[] r : roads){
+        int a = find(r[0]), b = find(r[1]);
+        dsu[a] = dsu[b];
+        ans[a] = ans[b] = Math.min(r[2],Math.min(ans[a],ans[b]));
     }
+    return ans[find(1)];
+}
+int find(int i){
+    return dsu[i]==i ? i : (dsu[i] = find(dsu[i]));
+}
+    
 }
