@@ -1,21 +1,21 @@
 class Solution {
-    public int makeConnected(int n, int[][] connections) {
-        if (connections.length < n - 1) return -1; // To connect all nodes need at least n-1 edges
-        int[] parent = new int[n];
-        for (int i = 0; i < n; i++) parent[i] = i;
-        int components = n;
-        for (int[] c : connections) {
-            int p1 = findParent(parent, c[0]);
-            int p2 = findParent(parent, c[1]);
-            if (p1 != p2) {
-                parent[p1] = p2; // Union 2 component
-                components--;
-            }
-        }
-        return components - 1; // Need (components-1) cables to connect components together
+    public static int findParent(int[] par, int i) {
+        if(par[i] == i) return i;
+        return par[i] = findParent(par, par[i]);
     }
-    private int findParent(int[] parent, int i) {
-        while (i != parent[i]) i = parent[i];
-        return i; // Without Path Compression
+    public int makeConnected(int n, int[][] connections) {
+        int[] parent = new int[n];
+        for(int i = 0; i < n; i++) parent[i] = i;
+        int m = connections.length;
+        int components = 0;
+        int extraEdge = 0;
+        for(int i = 0; i < m; i++) {
+            int p1 = findParent(parent, connections[i][0]);
+            int p2 = findParent(parent, connections[i][1]);
+            if(p1 == p2) extraEdge++;
+            else parent[p1] = p2;
+        }
+        for(int i = 0; i < n; i++) if(parent[i] == i) components++;
+        return (extraEdge >= components - 1) ? components - 1 : -1;
     }
 }
