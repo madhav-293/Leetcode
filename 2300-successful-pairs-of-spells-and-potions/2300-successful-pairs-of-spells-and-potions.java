@@ -1,22 +1,15 @@
 class Solution {
     public int[] successfulPairs(int[] spells, int[] potions, long success) {
-        Arrays.sort(potions);
-        
-        for(int i = 0; i < spells.length; i++) {
-            int l = 0, r = potions.length;
-            
-            while(l < r) {
-                int m = l + (r - l) / 2;
-                
-                if((long)spells[i]*potions[m]  >= success)
-                    r = m;
-                else
-                    l = m + 1;
-            }
-            
-            spells[i] = potions.length - l;
-        }
-        
-        return spells;
-    }
+		Arrays.sort(potions);
+		TreeMap<Long, Integer> map = new TreeMap<>();
+        map.put(Long.MAX_VALUE, potions.length);
+		for (int i = potions.length - 1; i >= 0; i--) {
+			map.put((long) potions[i], i);
+		}
+		for (int i = 0; i < spells.length; i++) {
+            long need = (success + spells[i] - 1) / spells[i];
+			spells[i] = potions.length - map.ceilingEntry(need).getValue();
+		}
+		return spells;
+	}
 }
