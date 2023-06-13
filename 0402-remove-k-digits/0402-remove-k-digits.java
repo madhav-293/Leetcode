@@ -1,28 +1,22 @@
 class Solution {
     public String removeKdigits(String num, int k) {
-        int len = num.length();
-        if(k == 0)  return num;
-        if(k == len) return "0";
-        
-        Stack<Character> stack = new Stack<>();
-        int index = 0;
-        
-        while(index < len){
-            while(k > 0 && !stack.isEmpty() && stack.peek() > num.charAt(index)){
+        if(k==0) return num;
+        if(k>=num.length()) return "0";
+        int count=0; StringBuilder sb=new StringBuilder(); Stack<Integer> stack=new Stack();
+        stack.push(Character.getNumericValue(num.charAt(0)));
+        for(int i=1;i<num.length();i++){
+            if(stack.isEmpty()||stack.peek()<=Character.getNumericValue(num.charAt(i))||count==k)
+                stack.push(Character.getNumericValue(num.charAt(i)));
+            else{
                 stack.pop();
-                k--;
+                count++;
+                i--;
             }
-            stack.push(num.charAt(index++));
         }
-        while(k-- > 0) stack.pop();
-        
-        String smallest = "";
-        while(!stack.isEmpty()) smallest = stack.pop() + smallest;
-        
-		// delete leading zeros
-        while(smallest.length() > 1 && smallest.charAt(0) == '0')
-            smallest = smallest.substring(1);
-        
-        return smallest;
+        while(!stack.isEmpty()) sb.insert(0,stack.pop());
+        sb=new StringBuilder(sb.toString().substring(0,num.length()-k));
+        while(sb.length()!=0&&sb.charAt(0)=='0') sb.deleteCharAt(0);
+        if(sb.length()==0) return "0";
+        return sb.toString();
     }
 }
