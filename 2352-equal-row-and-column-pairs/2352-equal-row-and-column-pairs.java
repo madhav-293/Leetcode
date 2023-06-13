@@ -1,22 +1,29 @@
+import java.util.HashMap;
+import java.util.Map;
 class Solution {
     public int equalPairs(int[][] grid) {
-        int c=0,midc=0;
-        int n=grid.length;
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                for(int k=0;k<n;k++){
-                    if(grid[i][k]==grid[k][j]){
-                        midc++;
-                        if(midc==n) {c++;
-                                    midc=0;}
-                    }
-                    else{
-                        midc=0;
-                        break;
-                    }
-                }
-            }
+        int count = 0;
+        int n = grid.length;
+
+        // Keep track of the frequency of each row.
+        Map<String, Integer> rowCounter = new HashMap<>();
+        for (int[] row : grid) 
+        {
+            String rowString = Arrays.toString(row);
+            rowCounter.put(rowString, 1 + rowCounter.getOrDefault(rowString, 0));
         }
-        return c;
+
+        // Add up the frequency of each column in the map.
+        for (int c = 0; c < n; c++) 
+        {
+            int[] colArray = new int[n];
+            for (int r = 0; r < n; r++) 
+            {
+                colArray[r] = grid[r][c];
+            }
+            count += rowCounter.getOrDefault(Arrays.toString(colArray), 0);
+        }
+
+        return count;
     }
 }
