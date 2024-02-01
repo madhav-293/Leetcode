@@ -1,19 +1,18 @@
 class Solution {
-    public int[][] divideArray(int[] nums, int k) {
+       public int[][] divideArray(int[] nums, int k) {
+                int len = nums.length;
+        int[][] res = new int[len/3][3];
         Arrays.sort(nums);
-        int n=nums.length;
-        for(int i=0;i<n;i=i+3){
-            if(nums[i+2]-nums[i]>k){
-                return new int[0][0];
+        for(int i=0,m=0; i<len; i=i+3,m++){
+            res[m][0] = nums[i];
+            for(int j=1; j<3; j++){
+                if(nums[i+j]-res[m][0]<=k){
+                    res[m][j]=nums[i+j];
+                } else{
+                    return new int[0][0];
+                }
             }
         }
-        int[][] arr=new int[n/3][3];
-        int p=0;
-        for(int i=0;i<n/3;i++){
-            for(int j=0;j<3;j++){
-                arr[i][j]=nums[p++];
-            }
-        }
-        return arr;
+        return res;
     }
 }
